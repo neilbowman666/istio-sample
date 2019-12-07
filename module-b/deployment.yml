@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: module-b
+  labels:
+    app: module-b
+    service: module-b
+spec:
+  ports:
+    - port: 8002
+      name: http
+  selector:
+    app: module-b
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: istio-sample-module-b
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: module-b-v1
+  labels:
+    app: module-b
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: module-b
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: module-b
+        version: v1
+    spec:
+      serviceAccountName: istio-sample-module-b
+      containers:
+        - image: okeyja/istio-sample-module-b:1.0.0
+          imagePullPolicy: Always
+          name: istio-sample-module-b
+          ports:
+            - containerPort: 8002

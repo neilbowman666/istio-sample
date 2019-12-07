@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: portal
+  labels:
+    app: portal
+    service: portal
+spec:
+  ports:
+    - port: 8000
+      name: http
+  selector:
+    app: portal
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: istio-sample-portal
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: portal-v1
+  labels:
+    app: portal
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: portal
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: portal
+        version: v1
+    spec:
+      serviceAccountName: istio-sample-portal
+      containers:
+        - image: okeyja/istio-sample-portal:1.0.0
+          imagePullPolicy: Always
+          name: istio-sample-portal
+          ports:
+            - containerPort: 8000

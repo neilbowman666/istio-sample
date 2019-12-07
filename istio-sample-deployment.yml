@@ -1,0 +1,201 @@
+#############################################################
+# Module A
+#############################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: module-a
+  labels:
+    app: module-a
+    service: module-a
+spec:
+  ports:
+    - port: 8001
+      name: http
+  selector:
+    app: module-a
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: istio-sample-module-a
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: module-a-v1
+  labels:
+    app: module-a
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: module-a
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: module-a
+        version: v1
+    spec:
+      serviceAccountName: istio-sample-module-a
+      containers:
+        - image: okeyja/istio-sample-module-a:1.0.0
+          imagePullPolicy: Always
+          name: istio-sample-module-a
+          ports:
+            - containerPort: 8001
+---
+
+
+#############################################################
+# Module B
+#############################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: module-b
+  labels:
+    app: module-b
+    service: module-b
+spec:
+  ports:
+    - port: 8002
+      name: http
+  selector:
+    app: module-b
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: istio-sample-module-b
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: module-b-v1
+  labels:
+    app: module-b
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: module-b
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: module-b
+        version: v1
+    spec:
+      serviceAccountName: istio-sample-module-b
+      containers:
+        - image: okeyja/istio-sample-module-b:1.0.0
+          imagePullPolicy: Always
+          name: istio-sample-module-b
+          ports:
+            - containerPort: 8002
+---
+
+
+#############################################################
+# Module C
+#############################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: module-c
+  labels:
+    app: module-c
+    service: module-c
+spec:
+  ports:
+    - port: 8003
+      name: http
+  selector:
+    app: module-c
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: istio-sample-module-c
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: module-c-v1
+  labels:
+    app: module
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: module-c
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: module-c
+        version: v1
+    spec:
+      serviceAccountName: istio-sample-module-c
+      containers:
+        - image: okeyja/istio-sample-module-c:1.0.0
+          imagePullPolicy: Always
+          name: istio-sample-module-c
+          ports:
+            - containerPort: 8003
+---
+
+
+#############################################################
+# Portal
+#############################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: portal
+  labels:
+    app: portal
+    service: portal
+spec:
+  ports:
+    - port: 8000
+      name: http
+  selector:
+    app: portal
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: istio-sample-portal
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: portal-v1
+  labels:
+    app: portal
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: portal
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: portal
+        version: v1
+    spec:
+      serviceAccountName: istio-sample-portal
+      containers:
+        - image: okeyja/istio-sample-portal:1.0.0
+          imagePullPolicy: Always
+          name: istio-sample-portal
+          ports:
+            - containerPort: 8000
